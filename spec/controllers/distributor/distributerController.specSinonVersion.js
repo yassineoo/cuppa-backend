@@ -1,11 +1,11 @@
 const sinon = require('sinon');
 const { PrismaClient } = require('@prisma/client');
-const fakeDistributors = require('../../data');
+const fakeDistributors = require('../../../data');
 const prisma = new PrismaClient();
 
 const {
      getAllDistributors,
-} = require('../../dist/controllers/distributerController.js');
+} = require('../../../dist/controllers/distributerController.js');
 
 describe('getAllDistributors', () => {
      it('should return all distributors', async () => {
