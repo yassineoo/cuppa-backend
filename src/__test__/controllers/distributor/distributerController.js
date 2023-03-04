@@ -1,9 +1,9 @@
 const { PrismaClient } = require('@prisma/client');
-const fakeDistributors = require('../../../data');
+const fakeDistributors = require('../../../../data');
 
 const {
      getAllDistributors,
-} = require('../../../dist/controllers/distributerController.js');
+} = require('../../../../dist/controllers/distributerController.js');
 const prisma = new PrismaClient();
 
 describe('getAllDistributors', () => {
