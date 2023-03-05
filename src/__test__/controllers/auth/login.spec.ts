@@ -43,7 +43,7 @@ describe('login', () => {
      });
 
 
-    /* it('should return a JWT token if credentials are valid', async () => {
+     it('should return a JWT token if credentials are valid', async () => {
           spyOn(sadm, 'findByPk').and.returnValue({ id_adm: 'testuser', password: 'testpassword' }
           );
           spyOn(bcrypt, 'compare').and.returnValue(Promise.resolve(true));
@@ -68,7 +68,7 @@ describe('login', () => {
           expect(res.status).toHaveBeenCalledWith(200);
 //          expect(res.json).toHaveBeenCalledWith({ token: 'testtoken' });
      });
-*/
+
      /*it('should return an error if credentials are invalid', async () => {
           spyOn(bcrypt, 'compare').and.returnValue(Promise.resolve(false));
 

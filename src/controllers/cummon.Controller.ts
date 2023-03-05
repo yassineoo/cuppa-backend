@@ -34,6 +34,7 @@ const login = async (req: Request, res: Response) => {
   } else if (role === 'Admin') {
     user = await adm.findByPk( username );
     if (user) user.id = user.id_adm;
+  console.log('-------------++++++++-----2 ',user);
 
   } else if (role === 'Commercial') {
     user = await ac.findByPk(username );
@@ -46,12 +47,15 @@ const login = async (req: Request, res: Response) => {
     user = await decideur.findByPk( username );
     if (user) user.id = user.id_decideur;
   }
+  console.log('-------------++++++++-----3 ' ,user);
 
   if (!user) {
     res.status(400);
+  console.log('-------------++++++++-----4 ');
     
     return res.json({ error: 'Invalid credentials' });
   }
+  console.log('-------------++++++++-----5 ');
 
   // Check password
   const passwordMatch = await bcrypt.compare(password, user.password);
