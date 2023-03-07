@@ -16,8 +16,11 @@ describe('Authorization middleware', () => {
 			json: jasmine.createSpy('json'),
 		};
     
-		next = () => {console.log();
-    };
+		next = () => {
+
+			console.log();
+		
+		};
 	
 	});
 

@@ -9,6 +9,14 @@ const ac = Singlton.getAc();
 
 class AccountManagmentService {
 
+	/**
+      * @description Delete an account from the database of the corresponding role.
+      * @param id {string} A string representing the id of the account to be deleted.
+      * @param role {string} A string representing the role of the account being deleted.
+      * @param adm {string} A string representing the id of the administrator who is authorized to delete the account.
+      * @returns {object} An object with a message indicating that the account was deleted successfully.
+      * @throws {Error} Throws an error if the account does not exist or if the administrator is not authorized to delete the account.
+      */
 
 	static deleteAccount = async (id: string, role: string, adm: string) => {
 
@@ -56,8 +64,9 @@ class AccountManagmentService {
    * @param body {object} contain all the necessary information for creation of the Account
    * @param role {string} role is the type of the account created
    * @param adm {string} id of the administrator who created the account
-   * @returns {object} Return object with only the whitelisted keys
-   */
+   * @returns {object} An object with only the whitelisted keys.
+   * @throws {Error} Throws an error if the role is invalid.
+  */
 
 	static  createAccount = async(body:any ,role:string,adm:string) => {
           
@@ -79,7 +88,6 @@ class AccountManagmentService {
 		
 		} catch (err) {
 
-			console.error(`Error creating account: ${err.message}`);
 			throw new Error(`Error creating account: ${err.message}`);
 		
 		}
@@ -109,13 +117,13 @@ class AccountManagmentService {
           
 		if (!account) {
 
-			throw new Error(`${role} not found`);
+			throw new Error('Account not found');
 		
 		}
           
 		if (modifierRole !== 'Admin' && account.id_adm !== modifierId) {
 
-			throw new Error(`Unauthorized to modify ${role}`);
+			throw new Error('Unauthorized to modify Account');
 		
 		}
           

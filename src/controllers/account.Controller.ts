@@ -37,17 +37,28 @@ const deleteAccount = async (req: Request, res: Response) => {
 
 	try {
 
-		const adm = req.user.id;
-		const { id,role } = req.params;
-		// call the controller function to delete the account
-		await AccountManagmentService.deleteAccount(id,role,adm);
-		// send the response back to the client
-		res.status(200).json({ success: true });
+		const { id, role } = req.params;
+		const { user } = req;
+  
+		const result = await AccountManagmentService.deleteAccount(id, role, user.id);
+  
+		res.status(200).json({ success: true, data: result });
 	
 	} catch (err) {
 
-		console.error(`Error deleting account: ${err.message}`);
-		res.status(500).json({ success: false, error: err.message });
+		if (err.message.includes('not found')) {
+
+			res.status(404).json({ success: false, error: err.message });
+		
+		} else if (err.message.includes('not authorized')) {
+
+			res.status(401).json({ success: false, error: err.message });
+		
+		} else {
+
+			res.status(400).json({ success: false, error: err.message });
+		
+		}
 	
 	}
 
@@ -68,14 +79,25 @@ const modifyAccount = async (req: Request, res: Response) => {
 	
 	} catch (err) {
 
-		console.error(`Error modifying commercial account: ${err.message}`);
-		res.status(500).json({ success: false, error: err.message });
+		if (err.message === 'Invalid role') {
+
+			res.status(400).json({ success: false, error: 'Invalid role' });
+		
+		} else if (err.message === 'Unauthorized to modify Account') {
+
+			res.status(401).json({ success: false, error: 'Unauthorized' });
+		
+		} else if (err.message === 'Admin not found' || err.message === 'Account not found') {
+
+			res.status(404).json({ success: false, error: err.message });
+		
+		}  else res.status(500).json({ success: false, error: `Error modifying commercial account: ${err.message}` });
 	
+	
+        
 	}
 
 };
-
-
 const getAccounts = async (req: Request, res: Response) => {
 
 	try {
@@ -88,8 +110,10 @@ const getAccounts = async (req: Request, res: Response) => {
 	
 	} catch (err) {
 
-		console.error(`Error getting accounts: ${err.message}`);
-		res.status(500).json({ success: false, error: err.message });
+		if (err.message === 'Invalid role') 
+			res.status(400).json({ success: false, error: 'Invalid role' });
+		else 
+			res.status(500).json({ success: false, error: err.message });
 	
 	}
 
