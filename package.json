@@ -8,7 +8,9 @@
     "dev": "nodemon --exec  ts-node ./src/server.ts",
     "build": "tsc",
     "prestart": "npm run build",
-    "test": "npm run jasmine-ts"
+    "test": "npm run jasmine-ts",
+    "lint": "eslint . --ext .ts",
+    "lint-and-fix": "eslint . --ext .ts --fix"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +29,10 @@
     "@types/jasmine": "^4.3.1",
     "@types/node": "^18.14.1",
     "@types/sinon": "^10.0.13",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
     "chai": "^4.3.7",
+    "eslint": "^8.35.0",
     "jasmine": "^3.6.4",
     "jasmine-core": "^4.5.0",
     "jasmine-ts": "^0.4.0",

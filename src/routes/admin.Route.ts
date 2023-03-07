@@ -1,73 +1,39 @@
-import express, { Request, Response } from 'express';
-import { createDecider, deleteDecider, modifyDecider } from '../controllers/deciderController';
-import { createCommercial, deleteCommercial, modifyCommercial } from '../controllers/commercialController';
-import { createMaintenance, deleteMaintenance, modifyMaintenance } from '../controllers/maintenanceController';
-import {Authorization} from '../middelware/auth'
+import express from 'express';
+import { createAccount, deleteAccount, modifyAccount,getAccounts } from '../controllers/account.Controller';
+import {Authorization} from '../middelware/auth';
 
 const router = express.Router();
+
+
 /**
 
-@route POST api/createDecider
-@desc Create a new Decider
+@route POST api/getAccounts
+@desc get All Accounts
 @access Admin
 */
-router.post('/createDecider',Authorization(['Admin']), createDecider);
+router.get('/getAccounts/:role',Authorization(['Admin']), getAccounts);
+
 /**
 
-@route DELETE api/deleteDecider/:id
-@desc Delete a Decider by id
+@route POST api/createAccount
+@desc Create a new Account
 @access Admin
 */
-router.delete('/deleteDecider/:id', deleteDecider);
+router.post('/createAccount/:role',Authorization(['Admin']), createAccount);
 /**
 
-@route PUT api/modifyDecider/:id
-@desc Modify a Decider by id
+@route DELETE api/deleteAccount/:id
+@desc Delete a Account by id
 @access Admin
 */
-router.put('/modifyDecider/:id', modifyDecider);
+router.delete('/deleteAccount/:role/:id',Authorization(['Admin']), deleteAccount);
 /**
 
-@route POST api/createCommercial
-@desc Create a new Commercial
+@route PUT api/modifyAccount/:id
+@desc Modify a Account by id
 @access Admin
 */
-router.post('/createCommercial', createCommercial);
-/**
-
-@route DELETE api/deleteCommercial/:id
-@desc Delete a Commercial by id
-@access Admin
-*/
-router.delete('/deleteCommercial/:id', deleteCommercial);
-/**
-
-@route PUT api/modifyCommercial/:id
-@desc Modify a Commercial by id
-@access Admin
-*/
-router.put('/modifyCommercial/:id', modifyCommercial);
-/**
-
-@route POST api/createMaintenance
-@desc Create a new Maintenance
-@access Admin
-*/
-router.post('/createMaintenance', createMaintenance);
-/**
-
-@route DELETE api/deleteMaintenance/:id
-@desc Delete a Maintenance by id
-@access Admin
-*/
-router.delete('/deleteMaintenance/:id', deleteMaintenance);
-/**
-
-@route PUT api/modifyMaintenance/:id
-@desc Modify a Maintenance by id
-@access Admin
-*/
-router.put('/modifyMaintenance/:id', modifyMaintenance);
+router.put('/modifyAccount/:id',Authorization(['Admin','Commercial','Maintenance','Decider']), modifyAccount);
 
 
 export default router;

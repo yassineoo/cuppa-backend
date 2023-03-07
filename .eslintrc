@@ -1,0 +1,43 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ]
+    ,
+    "rules": { 
+        "no-console": 0 ,
+        "indent": ["error", "tab", { "SwitchCase": 1 }],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "padded-blocks": ["error", "always"],
+        "space-infix-ops": "error",
+       // "prettier/prettier": "error",
+        "camelcase": ["error", { "properties": "never" }],
+        "consistent-this": ["error", "self"],
+        "func-names": ["error", "as-needed"],
+       // "no-magic-numbers": ["error", { "ignoreArrayIndexes": true }],
+       
+        "no-param-reassign": ["error", { "props": false }],
+        "no-underscore-dangle": "off",
+        "class-methods-use-this": "off",
+        "max-classes-per-file": ["error", 1],
+        "new-cap": ["error", { "newIsCap": true, "capIsNew": false }],
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "prefer-arrow-callback": "error",
+        "prefer-const": "error",
+        "prefer-template": "error",
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        
+         "no-namespace": "off"
+       // "uppercase": "error",
+     
+        }
+      
+      
+  }

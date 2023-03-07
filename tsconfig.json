@@ -13,7 +13,7 @@
       "*": ["node_modules/*", "./*"]
     }
   },
-  "include": ["./*", "src/models", "src/database", "src/controllers", "src/server.ts"],
+  "include": ["./*", "src/models", "src/database", "src/controllers", "src/server.ts", "src/config/sequelizer.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
 

@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
-import { createAdmin, deleteAdmin, modifyAdmin, getAllAdmins } from '../controllers/adminController';
-import {Authorization} from '../middelware/auth'
+import express from 'express';
+import { createAdmin, deleteAdmin, modifyAdmin, getAllAdmins } from '../controllers/admin.Controller';
+import {Authorization} from '../middelware/auth';
 
 const router = express.Router();
 

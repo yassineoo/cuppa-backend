@@ -1,7 +1,6 @@
-import express, { Request, Response } from 'express';
-import { getAllDistributors,createDistributor, deleteDistributor, modifyDistributor } from '../controllers/distributerController';
-import {login} from '../controllers/cummon'
-import {Authorization} from '../middelware/auth'
+import express from 'express';
+import { getAllDistributors,createDistributor, deleteDistributor, modifyDistributor } from '../controllers/distributor.Controller';
+import {login ,Authorization } from '../middelware/auth';
 const router = express.Router();
 
 
@@ -14,7 +13,14 @@ const router = express.Router();
  * @desc    Get all Distributors
  * @access  SuperAdmin
  */
-router.get('/getAllDistributors',getAllDistributors);
+router.get('/getAllDistributors',Authorization(['SuperAdmin']),getAllDistributors);
+
+/**
+ * @route   GET api/getAllDistributors
+ * @desc    Get all Distributors
+ * @access  SuperAdmin,Admin,Decider,Commercial,Maintenance
+ */
+router.get('/getMyDistributors/:id',Authorization(['SuperAdmin,Admin,Decider,Commercial,Maintenance']),getAllDistributors);
 
 
 /**
@@ -50,9 +56,6 @@ router.put('/modifyDistributor/:id',Authorization(['SuperAdmin']), modifyDistrib
  * @access  Public
 */
 
-router.get('/kkk',(req:Request,res:Response)=> {console.log('hiiiiiiiiii');
-res.status(200).json({hi:'jjj'});}
-)
 router.post('/login',login );
 
 export default router;
