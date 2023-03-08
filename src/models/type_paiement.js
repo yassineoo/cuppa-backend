@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    nom_type: {
+    nom_type_paiement: {
       type: DataTypes.STRING(50),
       allowNull: true
     }

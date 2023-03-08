@@ -6,19 +6,19 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    first_name_annonceur: {
+    nom_annonceur: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    last_name_annonceur: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    path_annonceur: {
+    prenom_annonceur: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
     sex_annonceur: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    path_annonceur: {
       type: DataTypes.STRING(50),
       allowNull: true
     },

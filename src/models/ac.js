@@ -6,7 +6,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    path_ac: {
+    nom_ac: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    prenom_ac: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
@@ -18,11 +22,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(10),
       allowNull: true
     },
-    first_name_ac: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    last_name_ac: {
+    path_ac: {
       type: DataTypes.STRING(50),
       allowNull: true
     },

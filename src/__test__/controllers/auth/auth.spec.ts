@@ -1,74 +1,80 @@
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { Authorization } from '../../../middelware/auth';
+import { Authorization } from '../../../middelware/auth'  ;
 
-describe('Authorization middleware', () => {
+describe('Authorization function', () => {
 
-	let req: any, res: any, next: any;
+	let mockRequest: Partial<Request>;
+	let mockResponse: Partial<Response>;
+	let mockNext: jasmine.Spy;
+	const mockUser = {
+		id: '123',
+		role: 'Admin',
+	};
+	const mockToken = jwt.sign(mockUser, 'secret');
 
 	beforeEach(() => {
 
-		req = {
-			header: () => 'Bearer token',
-			user: {},
-		};
-		res = {
+		mockRequest = {};
+		mockResponse = {
 			status: jasmine.createSpy('status'),
 			json: jasmine.createSpy('json'),
 		};
-    
-		next = () => {
-
-			console.log();
+		mockNext = jasmine.createSpy('next');
 		
-		};
 	
 	});
 
-	it('should set req.user if token is valid and user has allowed role', async () => {
+	it('should call next if the token is valid and the user has the allowed role', async () => {
 
-		const token = jwt.sign({ id: '123', role: 'admin' }, 'secret');
-		const middleware = Authorization(['admin']);
-		req.header = () => `Bearer ${token}`;
+		spyOn(jwt, 'verify').and.returnValue(mockUser);
+		mockRequest.header = jasmine.createSpy('header').and.returnValue(`Bearer ${mockToken}`);
+		const allowedRoles = ['Admin'];
 
-		await middleware(req, res, next);
-		expect(req.user).toEqual({ id: '123', role: 'admin' });
+		const middleware = Authorization(allowedRoles);
+		await middleware(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
+
+		expect(mockRequest.user).toEqual(mockUser);
+		expect(mockNext).toHaveBeenCalled();
 	
 	});
 
-	it('should return 401 if no token is provided', async () => {
+	it('should return an error if the token is missing', async () => {
 
-		const middleware = Authorization(['admin']);
-		req.header = () => null;
-		const statusSpy = spyOn(res, 'status').and.callThrough();
+		mockRequest.header = jasmine.createSpy('header').and.returnValue(null);
+		const allowedRoles = ['Admin'];
 
-		await middleware(req, res, next);
+		const middleware = Authorization(allowedRoles);
+		await middleware(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
 
-		expect(statusSpy).toHaveBeenCalledWith(401);
+		expect(mockResponse.status).toHaveBeenCalledWith(401);
+		expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Access denied. No token provided.' });
 	
 	});
 
-	it('should return 403 if user does not have allowed role', async () => {
+	it('should return an error if the token is invalid', async () => {
 
-		const token = jwt.sign({ id: '123', role: 'user' }, 'secret');
-		const middleware = Authorization(['admin']);
-		req.header = () => `Bearer ${token}`;
-		const statusSpy = spyOn(res, 'status').and.callThrough();
+		mockRequest.header = jasmine.createSpy('header').and.returnValue('Bearer invalid-token');
+		const allowedRoles = ['Admin'];
 
-		await middleware(req, res, next);
+		const middleware = Authorization(allowedRoles);
+		await middleware(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
 
-		expect(statusSpy).toHaveBeenCalledWith(403);
+		expect(mockResponse.status).toHaveBeenCalledWith(500);
+		expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Access denied. Invalid token.' });
 	
 	});
 
-	it('should return 401 if token is invalid', async () => {
+	it('should return an error if the user does not have the allowed role', async () => {
 
-		const middleware = Authorization(['admin']);
-		req.header = () => 'Bearer invalid_token';
-		const statusSpy = spyOn(res, 'status').and.callThrough();
+		mockRequest.header = jasmine.createSpy('header').and.returnValue(`Bearer ${mockToken}`);
+		const allowedRoles = ['SuperAdmin'];
 
-		await middleware(req, res, next);
+		const middleware = Authorization(allowedRoles);
+		await middleware(mockRequest as Request, mockResponse as Response, mockNext as NextFunction);
 
-		expect(statusSpy).toHaveBeenCalledWith(401);
+		expect(mockResponse.status).toHaveBeenCalledWith(403);
+		expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Access denied. You are not authorized to access this resource.' });
 	
 	});
 

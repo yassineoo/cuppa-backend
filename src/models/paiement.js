@@ -6,6 +6,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    date_paiement: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
+    },
     heure_paiement: {
       type: DataTypes.TIME,
       allowNull: true

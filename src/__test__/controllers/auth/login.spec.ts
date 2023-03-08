@@ -30,13 +30,13 @@ describe('login', () => {
 
 	it('should return a JWT token if credentials are valid', async () => {
 
-		spyOn(sadm, 'findByPk').and.returnValue({ id_adm: 'testuser', password: 'testpassword' });
+		spyOn(sadm, 'findOne').and.returnValue({ id_adm: 'testuser', password: 'testpassword' });
 		spyOn(bcrypt, 'compare').and.returnValue(Promise.resolve(true));
 		spyOn(jwtLogin, 'sign').and.returnValue('testtoken');
 		await login(req as Request, res as Response);
 
 		expect(bcrypt.compare).toHaveBeenCalledWith('testpassword', 'testpassword');
-		expect(sadm.findByPk).toHaveBeenCalledWith('testuser');
+		expect(sadm.findOne).toHaveBeenCalledWith({ where : {username:'testuser'}});
 		expect(jwtLogin.sign).toHaveBeenCalledWith({ id: 'testuser', role: 'SuperAdmin' }, 'secret', { expiresIn: '1d' });
 		expect(res.status).toHaveBeenCalledWith(200);
 		expect(res.json).toHaveBeenCalledWith({ token: 'testtoken' });
@@ -45,7 +45,7 @@ describe('login', () => {
 
 	it('should return an error if credentials are invalid', async () => {
 
-		spyOn(sadm, 'findByPk').and.returnValue(null);
+		spyOn(sadm, 'findOne').and.returnValue(null);
 
 		await login(req as Request, res as Response);
 
@@ -55,13 +55,13 @@ describe('login', () => {
 	});
 	it('should return an error if credentials are invalid (password is wrong)', async () => {
 
-		spyOn(sadm, 'findByPk').and.returnValue({ id_adm: 'testuser', password: 'theTruePassword' });
+		spyOn(sadm, 'findOne').and.returnValue({ id_adm: 'testuser', password: 'theTruePassword' });
 		spyOn(bcrypt, 'compare').and.returnValue(Promise.resolve(false));
 
 		await login(req as Request, res as Response);
 
 		expect(bcrypt.compare).toHaveBeenCalledWith('testpassword', 'theTruePassword');
-		expect(sadm.findByPk).toHaveBeenCalledWith('testuser');
+		expect(sadm.findOne).toHaveBeenCalledWith({ where : {username:'testuser'}});
 		expect(res.status).toHaveBeenCalledWith(401);
 		expect(res.json).toHaveBeenCalledWith({ error: 'Invalid credentials' });
 	

@@ -3,9 +3,11 @@ var _ac = require("./ac");
 var _accepter_suppliment = require("./accepter_suppliment");
 var _acheter_distributeur = require("./acheter_distributeur");
 var _adm = require("./adm");
+var _afficher_dans_region = require("./afficher_dans_region");
 var _ajouter_supplement = require("./ajouter_supplement");
 var _am = require("./am");
-var _annoces = require("./annoces");
+var _am_avoir_tache = require("./am_avoir_tache");
+var _annoce = require("./annoce");
 var _annoceur = require("./annoceur");
 var _avoir_model = require("./avoir_model");
 var _boissons = require("./boissons");
@@ -30,6 +32,7 @@ var _region = require("./region");
 var _region_dynamique = require("./region_dynamique");
 var _sadm = require("./sadm");
 var _supplement = require("./supplement");
+var _tache = require("./tache");
 var _type_paiement = require("./type_paiement");
 var _willaya = require("./willaya");
 
@@ -38,9 +41,11 @@ function initModels(sequelize) {
   var accepter_suppliment = _accepter_suppliment(sequelize, DataTypes);
   var acheter_distributeur = _acheter_distributeur(sequelize, DataTypes);
   var adm = _adm(sequelize, DataTypes);
+  var afficher_dans_region = _afficher_dans_region(sequelize, DataTypes);
   var ajouter_supplement = _ajouter_supplement(sequelize, DataTypes);
   var am = _am(sequelize, DataTypes);
-  var annoces = _annoces(sequelize, DataTypes);
+  var am_avoir_tache = _am_avoir_tache(sequelize, DataTypes);
+  var annoce = _annoce(sequelize, DataTypes);
   var annoceur = _annoceur(sequelize, DataTypes);
   var avoir_model = _avoir_model(sequelize, DataTypes);
   var boissons = _boissons(sequelize, DataTypes);
@@ -65,17 +70,22 @@ function initModels(sequelize) {
   var region_dynamique = _region_dynamique(sequelize, DataTypes);
   var sadm = _sadm(sequelize, DataTypes);
   var supplement = _supplement(sequelize, DataTypes);
+  var tache = _tache(sequelize, DataTypes);
   var type_paiement = _type_paiement(sequelize, DataTypes);
   var willaya = _willaya(sequelize, DataTypes);
 
+  am.belongsToMany(tache, { as: 'id_tache_taches', through: am_avoir_tache, foreignKey: "id_am", otherKey: "id_tache" });
+  annoce.belongsToMany(region_dynamique, { as: 'id_region_dynamique_region_dynamiques', through: afficher_dans_region, foreignKey: "id_annonce", otherKey: "id_region_dynamique" });
   boissons.belongsToMany(ingredient, { as: 'id_ingredient_ingredients', through: preperer_avec, foreignKey: "id_boissons", otherKey: "id_ingredient" });
   boissons.belongsToMany(supplement, { as: 'id_supplement_supplements', through: accepter_suppliment, foreignKey: "id_boissons", otherKey: "id_supplement" });
   commande.belongsToMany(supplement, { as: 'id_supplement_supplement_ajouter_supplements', through: ajouter_supplement, foreignKey: "id_commande", otherKey: "id_supplement" });
   distributeur.belongsToMany(model_distributeur, { as: 'id_type_model_distributeurs', through: avoir_model, foreignKey: "id_distributeur", otherKey: "id_type" });
   ingredient.belongsToMany(boissons, { as: 'id_boissons_boissons_preperer_avecs', through: preperer_avec, foreignKey: "id_ingredient", otherKey: "id_boissons" });
   model_distributeur.belongsToMany(distributeur, { as: 'id_distributeur_distributeurs', through: avoir_model, foreignKey: "id_type", otherKey: "id_distributeur" });
+  region_dynamique.belongsToMany(annoce, { as: 'id_annonce_annoces', through: afficher_dans_region, foreignKey: "id_region_dynamique", otherKey: "id_annonce" });
   supplement.belongsToMany(boissons, { as: 'id_boissons_boissons', through: accepter_suppliment, foreignKey: "id_supplement", otherKey: "id_boissons" });
   supplement.belongsToMany(commande, { as: 'id_commande_commandes', through: ajouter_supplement, foreignKey: "id_supplement", otherKey: "id_commande" });
+  tache.belongsToMany(am, { as: 'id_am_ams', through: am_avoir_tache, foreignKey: "id_tache", otherKey: "id_am" });
   annoceur.belongsTo(ac, { as: "id_ac_ac", foreignKey: "id_ac"});
   ac.hasMany(annoceur, { as: "annoceurs", foreignKey: "id_ac"});
   donner_prix.belongsTo(ac, { as: "id_ac_ac", foreignKey: "id_ac"});
@@ -86,10 +96,14 @@ function initModels(sequelize) {
   adm.hasMany(am, { as: "ams", foreignKey: "id_adm"});
   decideur.belongsTo(adm, { as: "id_adm_adm", foreignKey: "id_adm"});
   adm.hasMany(decideur, { as: "decideurs", foreignKey: "id_adm"});
+  am_avoir_tache.belongsTo(am, { as: "id_am_am", foreignKey: "id_am"});
+  am.hasMany(am_avoir_tache, { as: "am_avoir_taches", foreignKey: "id_am"});
   panne.belongsTo(am, { as: "id_am_am", foreignKey: "id_am"});
   am.hasMany(panne, { as: "pannes", foreignKey: "id_am"});
-  annoces.belongsTo(annoceur, { as: "id_anonceur_annoceur", foreignKey: "id_anonceur"});
-  annoceur.hasMany(annoces, { as: "annoces", foreignKey: "id_anonceur"});
+  afficher_dans_region.belongsTo(annoce, { as: "id_annonce_annoce", foreignKey: "id_annonce"});
+  annoce.hasMany(afficher_dans_region, { as: "afficher_dans_regions", foreignKey: "id_annonce"});
+  annoce.belongsTo(annoceur, { as: "id_anonceur_annoceur", foreignKey: "id_anonceur"});
+  annoceur.hasMany(annoce, { as: "annoces", foreignKey: "id_anonceur"});
   accepter_suppliment.belongsTo(boissons, { as: "id_boissons_boisson", foreignKey: "id_boissons"});
   boissons.hasMany(accepter_suppliment, { as: "accepter_suppliments", foreignKey: "id_boissons"});
   commande.belongsTo(boissons, { as: "id_boissons_boisson", foreignKey: "id_boissons"});
@@ -136,6 +150,8 @@ function initModels(sequelize) {
   pays.hasMany(willaya, { as: "willayas", foreignKey: "nom_pays"});
   distributeur.belongsTo(region, { as: "id_region_region", foreignKey: "id_region"});
   region.hasMany(distributeur, { as: "distributeurs", foreignKey: "id_region"});
+  afficher_dans_region.belongsTo(region_dynamique, { as: "id_region_dynamique_region_dynamique", foreignKey: "id_region_dynamique"});
+  region_dynamique.hasMany(afficher_dans_region, { as: "afficher_dans_regions", foreignKey: "id_region_dynamique"});
   distributeur.belongsTo(region_dynamique, { as: "id_region_dynamique_region_dynamique", foreignKey: "id_region_dynamique"});
   region_dynamique.hasMany(distributeur, { as: "distributeurs", foreignKey: "id_region_dynamique"});
   adm.belongsTo(sadm, { as: "id_sadm_sadm", foreignKey: "id_sadm"});
@@ -148,6 +164,8 @@ function initModels(sequelize) {
   supplement.hasMany(accepter_suppliment, { as: "accepter_suppliments", foreignKey: "id_supplement"});
   ajouter_supplement.belongsTo(supplement, { as: "id_supplement_supplement", foreignKey: "id_supplement"});
   supplement.hasMany(ajouter_supplement, { as: "ajouter_supplements", foreignKey: "id_supplement"});
+  am_avoir_tache.belongsTo(tache, { as: "id_tache_tache", foreignKey: "id_tache"});
+  tache.hasMany(am_avoir_tache, { as: "am_avoir_taches", foreignKey: "id_tache"});
   paiement.belongsTo(type_paiement, { as: "id_type_paiement_type_paiement", foreignKey: "id_type_paiement"});
   type_paiement.hasMany(paiement, { as: "paiements", foreignKey: "id_type_paiement"});
   commune.belongsTo(willaya, { as: "num_willaya_willaya", foreignKey: "num_willaya"});
@@ -158,9 +176,11 @@ function initModels(sequelize) {
     accepter_suppliment,
     acheter_distributeur,
     adm,
+    afficher_dans_region,
     ajouter_supplement,
     am,
-    annoces,
+    am_avoir_tache,
+    annoce,
     annoceur,
     avoir_model,
     boissons,
@@ -185,6 +205,7 @@ function initModels(sequelize) {
     region_dynamique,
     sadm,
     supplement,
+    tache,
     type_paiement,
     willaya,
   };

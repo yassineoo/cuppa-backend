@@ -6,19 +6,19 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    first_name_client: {
+    nom_client: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    last_name_client: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    type_client: {
+    prenom_client: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
     sex_client: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    type_client: {
       type: DataTypes.STRING(50),
       allowNull: true
     },

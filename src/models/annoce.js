@@ -1,50 +1,46 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('decideur', {
-    id_decideur: {
+  return sequelize.define('annoce', {
+    id_annonce: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    nom__decideur: {
+    dure_affichage: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    prenom__decideur: {
+    sex: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    date_naissance__ecideur: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
+    ageMin: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     },
-    sex_decideur: {
+    ageMax: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    path_video: {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    path_decideur: {
-      type: DataTypes.STRING(50),
+    prix_annonce: {
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
-    usename__decideur: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    password__decideur: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    id_adm: {
+    id_anonceur: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'adm',
-        key: 'id_adm'
+        model: 'annoceur',
+        key: 'id_anonceur'
       }
     }
   }, {
     sequelize,
-    tableName: 'decideur',
+    tableName: 'annoce',
     timestamps: false,
     indexes: [
       {
@@ -52,14 +48,14 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "id_decideur" },
+          { name: "id_annonce" },
         ]
       },
       {
-        name: "id_adm",
+        name: "id_anonceur",
         using: "BTREE",
         fields: [
-          { name: "id_adm" },
+          { name: "id_anonceur" },
         ]
       },
     ]

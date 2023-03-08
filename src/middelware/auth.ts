@@ -29,12 +29,15 @@ const Authorization = (allowedRoles: string[]) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 
 		try {
-
+     
 			const token = req.header('Authorization')?.replace('Bearer ', '');
-      
+
+
+			
 			if (!token) {
 
-				return res.status(401).send({ error: 'Access denied. No token provided.' });
+				res.status(401);
+				return res.json({ error: 'Access denied. No token provided.' });
 			
 			}
    
@@ -45,7 +48,8 @@ const Authorization = (allowedRoles: string[]) => {
 
 			if (!allowedRoles.includes(decoded.role)) {
 
-				return res.status(403).send({ error: 'Access denied. You are not authorized to access this resource.' });
+				res.status(403);
+				return res.json({ error: 'Access denied. You are not authorized to access this resource.' });
 			
 			}
 
@@ -53,7 +57,8 @@ const Authorization = (allowedRoles: string[]) => {
 		
 		} catch (error) {
 
-			return res.status(401).send({ error: 'Access denied. Invalid token.' });
+			res.status(500);
+			return res.json({ error: 'Access denied. Invalid token.' });
 		
 		}
 	
@@ -70,28 +75,28 @@ const login = async (req: Request, res: Response) => {
 
 	if (role === 'SuperAdmin') {
 
-		user = await sadm.findByPk( username );
+		user = await sadm.findOne({ where: { username } });
 
 		if (user) user.id = user.id_adm;
 	
 	} else if (role === 'Admin') {
 
-		user = await adm.findByPk( username );
+		user = await adm.findOne({ where: { username } });
 		if (user) user.id = user.id_adm;
 
 	} else if (role === 'Commercial') {
 
-		user = await ac.findByPk(username );
+		user = await ac.findOne({ where: { username } });
 		if (user) user.id = user.id_ac;
 	
 	} else if (role === 'Maintenance') {
 
-		user = await am.findByPk(username );
+		user = await am.findOne({ where: { username } });
 		if (user) user.id = user.id_am;
 
 	} else if (role === 'Decider') {
 
-		user = await decideur.findByPk( username );
+		user = await decideur.findOne({ where: { username } });
 		if (user) user.id = user.id_decideur;
 	
 	}

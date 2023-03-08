@@ -1,31 +1,27 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('preperer_avec', {
-    id_boissons: {
+  return sequelize.define('afficher_dans_region', {
+    id_region_dynamique: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'boissons',
-        key: 'id_boissons'
+        model: 'region_dynamique',
+        key: 'id_region_dynamique'
       }
     },
-    id_ingredient: {
+    id_annonce: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       references: {
-        model: 'ingredient',
-        key: 'id_ingredient'
+        model: 'annoce',
+        key: 'id_annonce'
       }
-    },
-    quantite_preparation: {
-      type: DataTypes.DOUBLE,
-      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'preperer_avec',
+    tableName: 'afficher_dans_region',
     timestamps: false,
     indexes: [
       {
@@ -33,15 +29,15 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "id_boissons" },
-          { name: "id_ingredient" },
+          { name: "id_region_dynamique" },
+          { name: "id_annonce" },
         ]
       },
       {
-        name: "id_ingredient",
+        name: "id_annonce",
         using: "BTREE",
         fields: [
-          { name: "id_ingredient" },
+          { name: "id_annonce" },
         ]
       },
     ]

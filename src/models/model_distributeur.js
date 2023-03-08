@@ -6,10 +6,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    path_distributeur: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
     Hauteur: {
       type: DataTypes.DOUBLE,
       allowNull: true
@@ -27,6 +23,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     Materiau: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    path_distributeur: {
       type: DataTypes.STRING(50),
       allowNull: true
     }
