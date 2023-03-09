@@ -5,18 +5,12 @@ import Singlton from '../../models/singlton';
 const decideur = Singlton.getDecideur();
 const am = Singlton.getAm();
 const ac = Singlton.getAc();
+const adm = Singlton.getAdm();
+const sadm = Singlton.getSadm();
 
 
 class AccountManagmentService {
 
-	/**
-      * @description Delete an account from the database of the corresponding role.
-      * @param id {string} A string representing the id of the account to be deleted.
-      * @param role {string} A string representing the role of the account being deleted.
-      * @param adm {string} A string representing the id of the administrator who is authorized to delete the account.
-      * @returns {object} An object with a message indicating that the account was deleted successfully.
-      * @throws {Error} Throws an error if the account does not exist or if the administrator is not authorized to delete the account.
-      */
 
 	static deleteAccount = async (id: string, role: string, adm: string) => {
 
@@ -64,9 +58,8 @@ class AccountManagmentService {
    * @param body {object} contain all the necessary information for creation of the Account
    * @param role {string} role is the type of the account created
    * @param adm {string} id of the administrator who created the account
-   * @returns {object} An object with only the whitelisted keys.
-   * @throws {Error} Throws an error if the role is invalid.
-  */
+   * @returns {object} Return object with only the whitelisted keys
+   */
 
 	static  createAccount = async(body:any ,role:string,adm:string) => {
           
@@ -88,6 +81,7 @@ class AccountManagmentService {
 		
 		} catch (err) {
 
+			console.error(`Error creating account: ${err.message}`);
 			throw new Error(`Error creating account: ${err.message}`);
 		
 		}
@@ -117,13 +111,13 @@ class AccountManagmentService {
           
 		if (!account) {
 
-			throw new Error('Account not found');
+			throw new Error(`${role} not found`);
 		
 		}
           
 		if (modifierRole !== 'Admin' && account.id_adm !== modifierId) {
 
-			throw new Error('Unauthorized to modify Account');
+			throw new Error(`Unauthorized to modify ${role}`);
 		
 		}
           
@@ -158,7 +152,63 @@ class AccountManagmentService {
 	
 	};
       
+	
+	/**
+   * @description create an account in the database of the corresponding admin
+   * @param body {object} contain all the necessary information for creation of the Account
+   * @param sadm {string} id of the super administrator who created the account
+   * @returns {object} Return object with only the whitelisted keys
+   */
 		
+	static createAdminAccount = async (body: any, sadm_id: string) => {
+		// Vérifiez que l'utilisateur appelant cette méthode est un super administrateur
+		const isSadm = await sadm.findOne({ where: { sadm_id } });
+		if (!isSadm) {
+		  throw new Error(`l'utilisateur ${sadm_id} n'est pas autorisé à créer un compte administrateur`);
+		}
+	
+		// Création
+		try {
+
+			await adm.create({...body,id_sadm: sadm_id});
+		
+		} catch (err) {
+
+			console.error(`Error creating account: ${err.message}`);
+			throw new Error(`Error creating account: ${err.message}`);
+		
+		}
+
+	};
+
+
+
+	/**
+   * @description delete an account in the database of the corresponding admin
+   * @param sadm_id {string} id of the super administrator who deleted the account
+   * @param adm_id {string} id of the administrator whose account is going to be deleted
+   * @returns {object} Return object with only the whitelisted keys
+   */
+
+	static deleteAdminAccount = async (adm_id: string, sadm_id: string) => {
+		// Vérifiez que l'utilisateur appelant cette méthode est un super administrateur
+		const isSadm = await sadm.findOne({ where: { sadm_id } });
+		if (!isSadm) {
+		  throw new Error(`l'utilisateur ${sadm_id} n'est pas autorisé à créer un compte administrateur`);
+		}
+	
+		// Rechercher le compte admin à supprimer
+		const adminAccount = await adm.findOne({ where: { adm_id } });
+		if (!adminAccount) {
+		  throw new Error(`Admin account with id ${adm_id} does not exist`);
+		}
+	
+		// Suppression
+		await adminAccount.destroy();
+	
+		return { message: `Admin account with id ${adm_id} deleted successfully` };
+	};
+	
 	
 
 }
