@@ -160,7 +160,7 @@ class AccountManagmentService {
    * @returns {object} Return object with only the whitelisted keys
    */
 		
-	static createAdminAccount = async (body: any, sadm_id: string) => {
+	static createAdmin = async (body: any, sadm_id: string) => {
 		// Vérifiez que l'utilisateur appelant cette méthode est un super administrateur
 		const isSadm = await sadm.findOne({ where: { sadm_id } });
 		if (!isSadm) {
@@ -190,7 +190,7 @@ class AccountManagmentService {
    * @returns {object} Return object with only the whitelisted keys
    */
 
-	static deleteAdminAccount = async (adm_id: string, sadm_id: string) => {
+	static deleteAdmin = async (adm_id: string, sadm_id: string) => {
 		// Vérifiez que l'utilisateur appelant cette méthode est un super administrateur
 		const isSadm = await sadm.findOne({ where: { sadm_id } });
 		if (!isSadm) {
